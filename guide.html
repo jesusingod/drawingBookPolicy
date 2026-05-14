@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>drawingBook - 구글 드라이브 연결 가이드</title>
+    <title>drawingBook - 클라우드 연결 가이드</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #4A90E2;
+            --r2-accent: #F38020;
             --bg: #F8FAFC;
             --card: #FFFFFF;
             --text: #334155;
@@ -40,14 +41,32 @@
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
             margin-bottom: 30px;
         }
-        h1 { margin: 0; font-size: 24px; }
-        h2 { color: var(--primary); font-size: 20px; border-bottom: 2px solid #E2E8F0; padding-bottom: 10px; margin-top: 0; }
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .nav-tab {
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            background: #E2E8F0;
+            color: #64748B;
+            text-decoration: none;
+        }
+        .nav-tab.active-drive { background: var(--primary); color: white; }
+        .nav-tab.active-r2 { background: var(--r2-accent); color: white; }
+
+        h2 { font-size: 20px; border-bottom: 2px solid #E2E8F0; padding-bottom: 10px; margin-top: 0; }
+        .drive-h2 { color: var(--primary); }
+        .r2-h2 { color: var(--r2-accent); }
+
         .step { margin-bottom: 40px; position: relative; padding-left: 50px; }
         .step-num {
             position: absolute;
             left: 0;
             top: 0;
-            background: var(--primary);
             color: white;
             width: 34px;
             height: 34px;
@@ -58,16 +77,9 @@
             font-weight: bold;
             font-size: 18px;
         }
-        .img-placeholder {
-            background: #EDF2F7;
-            border: 2px dashed #CBD5E0;
-            border-radius: 12px;
-            padding: 40px;
-            text-align: center;
-            margin: 15px 0;
-            color: #718096;
-            font-size: 14px;
-        }
+        .drive-step .step-num { background: var(--primary); }
+        .r2-step .step-num { background: var(--r2-accent); }
+
         .tip {
             background: #FFF5F5;
             border-left: 4px solid var(--accent);
@@ -83,65 +95,65 @@
             font-family: monospace;
             color: var(--accent);
         }
-        .footer {
-            text-align: center;
-            color: #94A3B8;
-            font-size: 12px;
-            padding: 40px 0;
-        }
+        .footer { text-align: center; color: #94A3B8; font-size: 12px; padding: 40px 0; }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>🎨 drawingBook</h1>
-        <p>우리 아이에게 무한한 그림 세상을 선물하세요!</p>
+        <h1>🎨 drawingBook 클라우드 가이드</h1>
+        <p>우리 아이에게 더 넓은 세상을 보여주세요!</p>
     </div>
 
     <div class="container">
-        <div class="card">
-            <h2>☁️ 구글 드라이브 연결이 무엇인가요?</h2>
-            <p>부모님이 구글 드라이브 폴더에 그림 파일을 넣어두면, 아이가 앱에서 그 그림들을 바로 불러와 색칠할 수 있는 기능입니다. 매번 앱을 업데이트하지 않아도 새로운 도안을 언제든 추가해 줄 수 있어요!</p>
+        <div class="nav-tabs">
+            <a href="#drive-section" class="nav-tab active-drive">Google Drive</a>
+            <a href="#r2-section" class="nav-tab active-r2">Cloudflare R2</a>
         </div>
 
-        <div class="card">
-            <h2>🚀 설정 방법 (3단계)</h2>
-
-            <div class="step">
+        <!-- Google Drive Section -->
+        <div id="drive-section" class="card">
+            <h2 class="drive-h2">📁 Google Drive 설정 방법</h2>
+            
+            <div class="step drive-step">
                 <div class="step-num">1</div>
-                <h3>드라이브 폴더 준비 및 공유</h3>
-                <p>1. 구글 드라이브에서 <b>색칠 도안용 새 폴더</b>를 만듭니다.<br>
-                   2. 폴더를 우클릭하고 <b>[공유]</b>를 누릅니다.<br>
-                   3. 일반 액세스를 <b>[링크가 있는 모든 사용자]</b>로 변경합니다.<br>
-                   4. 해당 폴더의 주소(URL)를 복사해 두세요.</p>
-                <div class="tip">💡 폴더가 '공개' 상태여야 앱에서 도안을 읽어올 수 있습니다.</div>
+                <h3>폴더 공유 설정</h3>
+                <p>도안용 폴더를 만들고 <b>[공유 > 링크가 있는 모든 사용자]</b>로 권한을 변경합니다. 폴더 주소를 복사하세요.</p>
             </div>
 
-            <div class="step">
+            <div class="step drive-step">
                 <div class="step-num">2</div>
-                <h3>구글 클라우드 API 키 발급</h3>
-                <p>이 단계는 PC에서 하시는 것을 추천합니다.</p>
-                <p>1. <a href="https://console.cloud.google.com/" target="_blank">구글 클라우드 콘솔</a>에 접속합니다.<br>
-                   2. 새 프로젝트를 생성합니다.<br>
-                   3. <b>[API 및 서비스 > 라이브러리]</b>에서 "Google Drive API"를 찾아 <b>[사용]</b>을 누릅니다.<br>
-                   4. <b>[사용자 인증 정보 > 인증 정보 만들기]</b>에서 <b>[API 키]</b>를 선택하여 생성합니다.<br>
-                   5. 생성된 API 키를 복사하세요.</p>
-            </div>
-
-            <div class="step">
-                <div class="step-num">3</div>
-                <h3>앱에 입력하기</h3>
-                <p>1. <b>drawingBook</b> 앱의 [설정 > 클라우드 연결]로 들어갑니다.<br>
-                   2. 복사한 <b>API 키</b>와 <b>폴더 주소</b>를 각각 붙여넣습니다.<br>
-                   3. <b>[연결 테스트]</b>를 눌러 성공 메시지가 나오면 저장하세요!</p>
+                <h3>API 키 발급</h3>
+                <p><a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a>에서 <b>Google Drive API</b>를 활성화하고 <b>API 키</b>를 생성합니다.</p>
             </div>
         </div>
 
-        <div class="card">
-            <h2>❓ 자주 묻는 질문</h2>
-            <p><b>Q. 어떤 이미지 파일을 넣어야 하나요?</b><br>
-            A. 흰색 배경에 검은색 선으로 된 <b>JPG 또는 PNG</b> 파일을 권장합니다.</p>
-            <p><b>Q. 연결이 안 된다고 나와요.</b><br>
-            A. 드라이브 폴더 공유 설정이 "링크가 있는 모든 사용자"로 되어 있는지, 그리고 API 키가 올바른지 다시 확인해 주세요.</p>
+        <!-- Cloudflare R2 Section -->
+        <div id="r2-section" class="card">
+            <h2 class="r2-h2">🟠 Cloudflare R2 설정 방법</h2>
+            <p>R2는 비용이 저렴하고 속도가 빠릅니다. (전문가용 추천)</p>
+
+            <div class="step r2-step">
+                <div class="step-num">1</div>
+                <h3>버킷(Bucket) 생성 및 파일 업로드</h3>
+                <p>1. Cloudflare 대시보드에서 <b>R2 > Create bucket</b>을 눌러 버킷을 만듭니다.<br>
+                   2. 버킷 안에 색칠 도안 이미지를 업로드합니다.</p>
+            </div>
+
+            <div class="step r2-step">
+                <div class="step-num">2</div>
+                <h3>API 토큰(Access Key) 생성</h3>
+                <p>1. <b>R2 > Manage R2 API Tokens</b>로 이동합니다.<br>
+                   2. <b>Create API token</b>을 누르고 <b>Object Read & Write</b> 권한을 선택합니다.<br>
+                   3. 생성된 <b>Access Key ID</b>와 <b>Secret Access Key</b>를 복사해 두세요.</p>
+            </div>
+
+            <div class="step r2-step">
+                <div class="step-num">3</div>
+                <h3>공유 주소(Public URL) 설정</h3>
+                <p>버킷 설정의 <b>Public Access</b> 탭에서 커스텀 도메인이나 R2.dev 주소를 활성화하세요. 이 주소를 통해 앱에서 이미지를 볼 수 있습니다.</p>
+            </div>
+
+            <div class="tip">💡 Endpoint는 Cloudflare 계정 ID가 포함된 주소 형식입니다.</div>
         </div>
 
         <div class="footer">
